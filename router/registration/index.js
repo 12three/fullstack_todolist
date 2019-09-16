@@ -14,15 +14,17 @@ router.post('/', [
     check('password')
         .not().isEmpty()
         .isLength({ min: 5 }),
-], (req, res) => {
-    const { username, rassword } = req.body;
+    ], (req, res) => {
+        const { username, password } = req.body;
 
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() });
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ errors: errors.array() });
+        }
+
+        // TODO: create user in db
+        res.end('OK');
     }
-
-    res.end('OK');
-});
+);
 
 module.exports = router;

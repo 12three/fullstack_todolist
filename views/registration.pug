@@ -5,15 +5,17 @@ block content
     .row
         .card-panel.col.s8.offset-s2
             .row
-                form.col.s8.offset-s2(style="padding-top: 35px" method="POST")
+                form#registrationForm.col.s8.offset-s2(style="padding-top: 35px" method="POST")
                     .row
                         .input-field.col.s12
                             input#username.validate(type='text' name="username")
                             label(for='username') Username
+                            span.error-container.helper-text(data-error="wrong")
                     .row
                         .input-field.col.s12
                             input#password.validate(type='password' name="password")
                             label(for='password') Password
+                            span.error-container.helper-text(data-error="wrong")
                     div.center-align
                         button.btn.waves-effect.waves-light.btn-large(type='submit')
                             | Submit
