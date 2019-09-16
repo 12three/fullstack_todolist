@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const root = require('./root');
-const todo = require('./todo');
 
-router.use('/', root);
-router.use('/todo', todo);
+router.use('/', require('./root'));
+router.use('/todo', require('./todo'));
+router.use('/registration', require('./registration'));
 
 module.exports = router;
