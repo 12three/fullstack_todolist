@@ -8,6 +8,9 @@ const MongoStore = require('connect-mongo')(session);
 const mongoose = require('./libs/mongoose');
 
 const app = express();
+
+app.set('view engine', 'pug');
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
