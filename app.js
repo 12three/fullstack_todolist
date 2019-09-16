@@ -1,11 +1,25 @@
 const express = require('express');
+const config = require('./config');
 const bodyParser = require('body-parser');
 const router = require('./router');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
+const MongoStore = require('connect-mongo')(session);
+const mongoose = require('./libs/mongoose');
 
 const app = express();
-
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(cookieParser());
+
+app.use(session({
+    ...config.get('session'),
+    ...{
+        store: new MongoStore({ mongooseConnection: mongoose.connection })
+    }
+}));
+
 app.use(router);
 
 module.exports = app;
