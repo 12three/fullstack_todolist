@@ -3,9 +3,11 @@ extends layout.pug
 block content
     h3.center-align Registration
     .row
-        .card-panel.col.s8.offset-s2
+        .card-panel.col.s8.offset-s2(style="position: relative")
             .row
                 form#registrationForm.col.s8.offset-s2(style="padding-top: 35px" method="POST")
+                    .progress.hide#loader(style="position: absolute; margin: 0; top: 0; left: 0; right: 0; border-radius: 0")
+                        .indeterminate
                     .row
                         .input-field.col.s12
                             input#username.validate(type='text' name="username")
@@ -17,6 +19,6 @@ block content
                             label(for='password') Password
                             span.error-container.helper-text(data-error="wrong")
                     div.center-align
-                        button.btn.waves-effect.waves-light.btn-large(type='submit')
+                        button#submitButton.btn.waves-effect.waves-light.btn-large(type='submit')
                             | Submit
                             i.material-icons.right send

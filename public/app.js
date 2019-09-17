@@ -12,6 +12,7 @@ async function registrationHandler(e) {
     const form = this;
     const formData = Object.fromEntries(new FormData(form));
 
+    blockForm(form);
     const response = await fetch('/registration', {
         headers: {
             'Content-Type': 'application/json',
@@ -21,10 +22,13 @@ async function registrationHandler(e) {
     })
 
     if (!response.ok) {
-        return handleErrors(form, response);
+        await handleErrors(form, response);
+    } else {
+        alert('CREATED');
+        // location.href = '/todos';
     }
 
-    location.href = '/todos';
+    unblockForm(form);
 }
 
 
@@ -64,6 +68,23 @@ function getField(form, fieldName) {
 
 function getErrorContainer(form, field) {
     return field.parentNode.querySelector('.error-container');
+}
+
+function blockForm(form) {
+    const loader = form.querySelector('#loader');
+    const submitButton = form.querySelector('#submitButton');
+
+    loader.classList.remove('hide');
+    submitButton.classList.add('disabled');
+}
+
+function unblockForm(form) {
+    const loader = form.querySelector('#loader');
+    const submitButton = form.querySelector('#submitButton');
+
+    console.log(loader.classList);
+    loader.classList.add('hide');
+    submitButton.classList.remove('disabled');
 }
 /*
     /REGISTRATION

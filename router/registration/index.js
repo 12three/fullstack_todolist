@@ -1,6 +1,8 @@
 const express = require('express');
 const { check, validationResult } = require('express-validator');
 const router = express.Router();
+const userServices = require('../../services/user');
+const AuthError = require('../../error/AuthError');
 
 router.get('/', function(req, res) {
     res.render('registration', { title: 'Registration' });
@@ -22,8 +24,24 @@ router.post('/', [
             return res.status(422).json({ errors: errors.array() });
         }
 
-        // TODO: create user in db
-        res.end('OK');
+        userServices.registerUser( username, password, (err) => {
+            if (err) {
+                console.log(err);
+                if (err instanceof AuthError) {
+                    return res.status(409).json({
+                        errors: [{
+                            param: 'username',
+                            msg: err.message,
+                        }],
+                    });
+                } else {
+                    throw err;
+                }
+            }
+
+            res.status(201).end();
+        });
+
     }
 );
 
