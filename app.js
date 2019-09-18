@@ -6,6 +6,7 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const MongoStore = require('connect-mongo')(session);
 const mongoose = require('./libs/mongoose');
+const loadUser = require('./middleware/loadUser');
 
 const app = express();
 
@@ -24,6 +25,8 @@ app.use(session({
         store: new MongoStore({ mongooseConnection: mongoose.connection })
     }
 }));
+
+app.use(loadUser);
 
 app.use(router);
 

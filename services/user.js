@@ -18,7 +18,6 @@ function login(username, password, done) {
     User.findOne({ username }, (err, user) => {
         if (err) done(err);
 
-
         if (!user) {
             return done(new AuthError('Unknown user', 'UU'));
         } else if (!user.checkPassword(password)) {
