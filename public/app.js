@@ -20,8 +20,7 @@ async function registrationHandler(e) {
     if (!response.ok) {
         await handleErrors(form, response);
     } else {
-        alert('CREATED');
-        // location.href = '/todos';
+        location.href = '/';
     }
 
     unblockForm(form);
