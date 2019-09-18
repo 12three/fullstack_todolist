@@ -118,12 +118,31 @@ async function loginHandler(e) {
     if (!response.ok) {
         await handleErrors(form, response);
     } else {
-        alert('LOGGEDIN');
-        // location.href = '/todos';
+        location.href = '/';
     }
 
     unblockForm(form);
 };
 /*
     /LOGIN
+*/
+
+/*
+    LOGOUT
+*/
+const logoutButton = document.getElementById('logoutButton');
+
+if (logoutButton) {
+    logoutButton.addEventListener('click', async function (e) {
+        e.preventDefault();
+
+        await fetch('/logout', {
+            method: 'POST',
+        });
+
+        location.href = '/';
+    });
+}
+/*
+    /LOGOUT
 */
