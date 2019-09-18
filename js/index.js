@@ -1,3 +1,3 @@
 import './todo/index';
-import './login/index';
+import './auth/index';
 import './registration/index';
