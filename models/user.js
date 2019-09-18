@@ -33,7 +33,7 @@ scheme.methods.checkPassword = function(password) {
 }
 
 scheme.virtual('password')
-    .set(password => {
+    .set(function (password){
         this._plainPassword = password;
         this.salt = Math.random() + '';
         this.hashedPassword = this.encryptPassword(password);
