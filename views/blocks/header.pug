@@ -5,7 +5,7 @@ nav
         li
           a#logoutButton(href='/login') Logout
       else
-        li
+        li(class= pageName == 'login' ? 'active' : '')
           a(href='/login') Login
-        li
+        li(class= pageName == 'registration' ? 'active' : '')
           a(href='/registration') Registration

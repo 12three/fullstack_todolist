@@ -5,7 +5,7 @@ const userServices = require('../../services/user');
 const AuthError = require('../../error/AuthError');
 
 router.get('/', (req, res) => {
-    res.render('login', { title: 'Login' });
+    res.render('login', { title: 'Login', pageName: 'login' });
 });
 
 router.post(
