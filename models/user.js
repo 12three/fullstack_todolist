@@ -19,6 +19,11 @@ const scheme = new mongoose.Schema({
         default: Date.now,
     },
 });
+
+scheme.methods.checkPassword = function(password) {
+    return this.password === password;
+}
+
 const User = mongoose.model('User', scheme);
 
 module.exports = User;

@@ -1,7 +1,7 @@
 const User = require('../models/user');
 const AuthError = require('../error/AuthError');
 
-function registerUser(username, password, done) {
+function register(username, password, done) {
     User.findOne({ username }, (err, user) => {
         if (err) done(err);
 
@@ -14,6 +14,22 @@ function registerUser(username, password, done) {
     });
 }
 
+function login(username, password, done) {
+    User.findOne({ username }, (err, user) => {
+        if (err) done(err);
+
+
+        if (!user) {
+            return done(new AuthError('Unknown user', 'UU'));
+        } else if (!user.checkPassword(password)) {
+            return done(new AuthError('Wrong password', 'WP'));
+        }
+
+        done(null, user)
+    });
+}
+
 module.exports = {
-    registerUser,
+    register,
+    login,
 };

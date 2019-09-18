@@ -2,24 +2,20 @@
     REGISTRATION
 */
 
-const registrationForm = document.getElementById('registrationForm');
-registrationForm.addEventListener('submit', registrationHandler);
-registrationForm.addEventListener('keypress', typingHandler);
+const registrationForm = document.querySelector('form[name="registration"]');
+
+if (registrationForm) {
+    registrationForm.addEventListener('submit', registrationHandler);
+    registrationForm.addEventListener('keypress', typingHandler);
+}
 
 async function registrationHandler(e) {
     e.preventDefault();
 
     const form = this;
-    const formData = Object.fromEntries(new FormData(form));
 
     blockForm(form);
-    const response = await fetch('/registration', {
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        method: 'POST',
-        body: JSON.stringify(formData),
-    })
+    const response = await sendForm(location.href, form);
 
     if (!response.ok) {
         await handleErrors(form, response);
@@ -31,6 +27,18 @@ async function registrationHandler(e) {
     unblockForm(form);
 }
 
+
+async function sendForm(url, form) {
+    const formData = Object.fromEntries(new FormData(form));
+
+    return await fetch(url, {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        method: 'POST',
+        body: JSON.stringify(formData),
+    });
+}
 
 function typingHandler(e) {
     const field = e.target;
@@ -82,10 +90,40 @@ function unblockForm(form) {
     const loader = form.querySelector('#loader');
     const submitButton = form.querySelector('#submitButton');
 
-    console.log(loader.classList);
     loader.classList.add('hide');
     submitButton.classList.remove('disabled');
 }
 /*
     /REGISTRATION
+*/
+
+/*
+    LOGIN
+*/
+const loginForm = document.querySelector('form[name="login"]');
+
+if (loginForm) {
+    loginForm.addEventListener('submit', loginHandler);
+    loginForm.addEventListener('keypress', typingHandler);
+}
+
+async function loginHandler(e) {
+    e.preventDefault();
+
+    const form = this;
+
+    blockForm(form);
+    const response = await sendForm(location.href, form);
+
+    if (!response.ok) {
+        await handleErrors(form, response);
+    } else {
+        alert('LOGGEDIN');
+        // location.href = '/todos';
+    }
+
+    unblockForm(form);
+};
+/*
+    /LOGIN
 */
