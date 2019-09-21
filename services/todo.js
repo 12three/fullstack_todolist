@@ -1,8 +1,8 @@
 const Todo = require('../models/todo');
+
 var ObjectId = require('mongoose').Types.ObjectId;
 
 async function create(userId, title) {
-    if (!title) throw new Error('Title is required');
     let todo = await _getUserTodo(userId);
 
     const task = { title };
