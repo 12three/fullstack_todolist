@@ -13,7 +13,7 @@ const scheme = new mongoose.Schema({
     },
     salt: {
         type: String,
-        // required: true,
+        required: true,
     },
     created: {
         type: Date,
