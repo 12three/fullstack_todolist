@@ -28,13 +28,14 @@ router.get('/', (req, res) => {
 
 
 router.put('/:id', (req, res) => {
-    const id = req.params.id;
+    const userId = req.user._id;
+    const todoId = req.params.id;
     const fields = req.body;
 
-    todoServices.updateById(id, fields, (err, todo) => {
+    todoServices.update(userId, todoId, fields, (err, todo) => {
         if (err) throw err;
 
-        res.end('Updated' , todo);
+        res.end('Updated', todo);
     });
 });
 

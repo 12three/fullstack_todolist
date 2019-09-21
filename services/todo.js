@@ -45,12 +45,29 @@ function removeById(userId, taskId, done) {
     });
 }
 
-function updateById(id, updatedFields, done) {
-    Todo.updateOne({ _id: id }, updatedFields, (err, todo) => {
+function update(userId, taskId, updatedFields, done) {
+    _getUserTodo(userId, (err, todo) => {
         if (err) return done(err);
 
-        done(null, todo);
+        if (todo) {
+            let task = todo.tasks.find(task => task._id.toString() === taskId);
+
+            Object.entries(updatedFields)
+                .forEach(([key, value]) => (task[key] = value));
+
+            return todo.save(done);
+        }
+
+        done(null)
     });
+
+
+
+    // Todo.updateOne({ _id: id }, updatedFields, (err, todo) => {
+    //     if (err) return done(err);
+
+    //     done(null, todo);
+    // });
 }
 
 function _getUserTodo(userId, done) {
@@ -61,6 +78,6 @@ module.exports = {
     create,
     getAll,
     removeById,
-    updateById,
+    update,
 };
 
