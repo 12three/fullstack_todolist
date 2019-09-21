@@ -1,35 +1,45 @@
 const Todo = require('../models/todo');
+var ObjectId = require('mongoose').Types.ObjectId;
 
-function create(title, done) {
-    if (!title) return done(new Error('Title is required'))
+function create(userId, title, done) {
+    if (!title) return done(new Error('Title is required'));
 
-    const todo = new Todo({ title });
-    todo.save(function(err, todo) {
+    _getUserTodo(userId, (err, todo) => {
         if (err) return done(err);
 
-        done(null, todo);
+        const task = { title };
+
+        if (!todo) {
+            const newTodo = new Todo({ user: userId, tasks: [task] });
+
+            return newTodo.save(done);
+        }
+
+        todo.tasks.push(task);
+        todo.save(done);
     });
 }
 
-function getAll(done) {
-    Todo.find({}, (err, todos) => {
+function getAll(userId, done) {
+    _getUserTodo(userId, (err, todo) => {
         if (err) return done(err);
 
-        done(null, todos);
+        if (!todo) {
+            return done(null, null);
+        }
+
+        done(null, todo.tasks);
     });
 }
 
-function getById(id, done) {
-    Todo.findById(id, (err, todo) => {
+function removeById(userId, taskId, done) {
+    _getUserTodo(userId, (err, todo) => {
         if (err) return done(err);
 
-        done(null, todo);
-    });
-}
-
-function removeById(id, done) {
-    Todo.remove({_id: id}, err => {
-        if (err) return done(err);
+        if (todo) {
+            todo.tasks.pull({ _id: taskId });
+            todo.save(done);
+        }
 
         done(null);
     });
@@ -43,10 +53,13 @@ function updateById(id, updatedFields, done) {
     });
 }
 
+function _getUserTodo(userId, done) {
+    return Todo.findOne({ user: new ObjectId(userId) }, done);
+}
+
 module.exports = {
     create,
     getAll,
-    getById,
     removeById,
     updateById,
 };

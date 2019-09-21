@@ -1,32 +1,28 @@
 const express = require('express');
 const router = express.Router();
 const todoServices = require('../../services/todo');
+const { check, validationResult } = require('express-validator');
 
 router.post('/', (req, res) => {
-    todoServices.create(req.body.title, (err, todo) => {
+    // TODO: check title existence
+    const title = req.body.title;
+    const userId = req.user._id;
+
+    todoServices.create(userId, title, err => {
         if (err) throw err;
 
-        res.end('Created');
+        res.status(201).end('Created');
     });
 });
 
 
 router.get('/', (req, res) => {
-    todoServices.getAll((err, todos) => {
+    const userId = req.user._id;
+
+    todoServices.getAll(userId, (err, todos) => {
         if (err) throw err;
 
         res.json(todos);
-    });
-});
-
-
-router.get('/:id', (req, res) => {
-    const id = req.params.id;
-
-    todoServices.getById(id, (err, todo) => {
-        if (err) throw err;
-
-        res.json(todo);
     });
 });
 
@@ -44,9 +40,10 @@ router.put('/:id', (req, res) => {
 
 
 router.delete('/:id', (req, res) => {
-    const id = req.params.id;
+    const todoId = req.params.id;
+    const userId = req.user._id;
 
-    todoServices.removeById(id, (err, todo) => {
+    todoServices.removeById(userId, todoId, (err, todo) => {
         if (err) throw err;
 
         res.end('Removed');
