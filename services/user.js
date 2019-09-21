@@ -1,31 +1,39 @@
 const User = require('../models/user');
 const AuthError = require('../error/AuthError');
 
-function register(username, password, done) {
-    User.findOne({ username }, (err, user) => {
-        if (err) done(err);
+async function register(username, password) {
+    let user = null;
 
-        if (user) {
-            return done(new AuthError('User already exist'));
-        }
+    try {
+        user = await User.findOne({ username });
+    } catch (e) {
+        throw e
+    }
 
-        const newUser = new User({ username, password });
-        newUser.save(done);
-    });
+    if (user) {
+        throw new AuthError('User already exist');
+    }
+
+    const newUser = new User({ username, password });
+    return newUser.save();
 }
 
-function login(username, password, done) {
-    User.findOne({ username }, (err, user) => {
-        if (err) done(err);
+async function login(username, password) {
+    let user = null;
 
-        if (!user) {
-            return done(new AuthError('Unknown user', 'UU'));
-        } else if (!user.checkPassword(password)) {
-            return done(new AuthError('Wrong password', 'WP'));
-        }
+    try {
+        user =  await User.findOne({ username });
+    } catch (e) {
+        throw e
+    }
 
-        done(null, user)
-    });
+    if (!user) {
+        return done(new AuthError('Unknown user', 'UU'));
+    } else if (!user.checkPassword(password)) {
+        return done(new AuthError('Wrong password', 'WP'));
+    }
+
+    return user;
 }
 
 module.exports = {

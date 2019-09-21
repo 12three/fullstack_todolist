@@ -4,30 +4,28 @@ const router = express.Router();
 const userServices = require('../../services/user');
 const AuthError = require('../../error/AuthError');
 
+const usernameValidator = check('username').not().isEmpty();
+const passwordValidator = check('password').not().isEmpty();
+
 router.get('/', (req, res) => {
     res.render('login', { title: 'Login', pageName: 'login' });
 });
 
-router.post(
-    '/',
-    [
-        check('username')
-            .not()
-            .isEmpty(),
-        check('password')
-            .not()
-            .isEmpty(),
-    ],
-    (req, res) => {
+router.post('/',
+    [ usernameValidator, passwordValidator ],
+    async (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(422).json({ errors: errors.array() });
         }
 
         const { username, password } = req.body;
+        let user = null;
 
-        userServices.login(username, password, (err, user) => {
-            if (err) {
+        try {
+            user = await userServices.login(username, password);
+        } catch (e) {
+            if (e) {
                 if (err instanceof AuthError) {
                     let fieldName = '';
 
@@ -53,13 +51,13 @@ router.post(
                         ],
                     });
                 } else {
-                    throw err;
+                    next(e)
                 }
             }
+        }
 
-            req.session.user = user._id;
-            res.end();
-        });
+        req.session.user = user._id;
+        res.end();
     },
 );
 

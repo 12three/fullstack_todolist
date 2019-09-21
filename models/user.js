@@ -40,9 +40,5 @@ scheme.virtual('password')
     })
     .get(() => this._plainPassword)
 
-
-
-const User = mongoose.model('User', scheme);
-
-module.exports = User;
+module.exports = mongoose.model('User', scheme);
 

@@ -1,77 +1,60 @@
 const Todo = require('../models/todo');
 var ObjectId = require('mongoose').Types.ObjectId;
 
-function create(userId, title, done) {
-    if (!title) return done(new Error('Title is required'));
+async function create(userId, title) {
+    if (!title) throw new Error('Title is required');
+    let todo = await _getUserTodo(userId);
 
-    _getUserTodo(userId, (err, todo) => {
-        if (err) return done(err);
+    const task = { title };
 
-        const task = { title };
+    if (!todo) {
+        const newTodo = new Todo({ user: userId, tasks: [task] });
 
-        if (!todo) {
-            const newTodo = new Todo({ user: userId, tasks: [task] });
+        return newTodo.save();
+    }
 
-            return newTodo.save(done);
-        }
-
-        todo.tasks.push(task);
-        todo.save(done);
-    });
+    todo.tasks.push(task);
+    todo.save();
 }
 
-function getAll(userId, done) {
-    _getUserTodo(userId, (err, todo) => {
-        if (err) return done(err);
+async function getAll(userId) {
+    let todo = await _getUserTodo(userId);
 
-        if (!todo) {
-            return done(null, null);
-        }
-
-        done(null, todo.tasks);
-    });
+    return todo ? todo.tasks : null;
 }
 
-function removeById(userId, taskId, done) {
-    _getUserTodo(userId, (err, todo) => {
-        if (err) return done(err);
+async function removeById(userId, taskId) {
+    let todo = await _getUserTodo(userId);
 
-        if (todo) {
-            todo.tasks.pull({ _id: taskId });
-            todo.save(done);
-        }
-
-        done(null);
-    });
+    if (todo) {
+        todo.tasks.pull({ _id: taskId });
+        todo.save();
+    }
 }
 
-function update(userId, taskId, updatedFields, done) {
-    _getUserTodo(userId, (err, todo) => {
-        if (err) return done(err);
+async function update(userId, taskId, updatedFields) {
+    let todo = await _getUserTodo(userId);
 
-        if (todo) {
-            let task = todo.tasks.find(task => task._id.toString() === taskId);
+     if (todo) {
+        let task = todo.tasks.find(task => task._id.toString() === taskId);
 
-            Object.entries(updatedFields)
-                .forEach(([key, value]) => (task[key] = value));
+        Object.entries(updatedFields)
+            .forEach(([key, value]) => (task[key] = value));
 
-            return todo.save(done);
-        }
-
-        done(null)
-    });
-
-
-
-    // Todo.updateOne({ _id: id }, updatedFields, (err, todo) => {
-    //     if (err) return done(err);
-
-    //     done(null, todo);
-    // });
+        return todo.save();
+    }
 }
 
-function _getUserTodo(userId, done) {
-    return Todo.findOne({ user: new ObjectId(userId) }, done);
+async function _getUserTodo(userId) {
+    let todo = null;
+
+    try {
+        todo = await Todo.findOne({ user: new ObjectId(userId) });
+    } catch (e) {
+        throw e;
+    }
+
+    return todo;
 }
 
 module.exports = {
