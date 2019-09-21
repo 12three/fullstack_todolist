@@ -5,15 +5,12 @@ const userServices = require('../../services/user');
 const AuthError = require('../../error/AuthError');
 
 const usernameValidator = check('username')
-    .not()
-    .isEmpty()
-    .trim()
-    .isLength({ min: 3 });
+    .not().isEmpty().withMessage('Username is required')
+    .isLength({ min: 3 }).withMessage('Must be at least 3 chars long');
 
 const passwordValidator = check('password')
-    .not()
-    .isEmpty()
-    .isLength({ min: 5 });
+    .not().isEmpty().withMessage('Password is required')
+    .isLength({ min: 5 }).withMessage('Must be at least 5 chars long');
 
 router.get('/', function(req, res) {
     res.render('registration', { title: 'Registration', pageName: 'registration' });

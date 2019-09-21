@@ -1,21 +1,31 @@
 const express = require('express');
 const router = express.Router();
 const todoServices = require('../../services/todo');
-const { check, validationResult } = require('express-validator');
+const { check, body, validationResult } = require('express-validator');
 
-router.post('/', async (req, res, next) => {
-    // TODO: check title existence
-    const title = req.body.title;
-    const userId = req.user._id;
+router.post(
+    '/',
+    check('title')
+        .exists()
+        .withMessage('Title is required'),
+    async (req, res, next) => {
+        const result = validationResult(req);
+        if (!result.isEmpty()) {
+            return res.status(400).end(result.errors[0].msg);
+        }
 
-    try {
-        await todoServices.create(userId, title);
-    } catch (e) {
-        return next(e);
-    }
+        const title = req.body.title;
+        const userId = req.user._id;
 
-    res.status(201).end('Created');
-});
+        try {
+            await todoServices.create(userId, title);
+        } catch (e) {
+            return next(e);
+        }
+
+        res.status(201).end('Created');
+    },
+);
 
 router.get('/', async (req, res, next) => {
     const userId = req.user._id;
@@ -31,18 +41,25 @@ router.get('/', async (req, res, next) => {
 });
 
 router.put('/:id', async (req, res, next) => {
-    const userId = req.user._id;
-    const todoId = req.params.id;
-    const fields = req.body;
+        const result = validationResult(req);
 
-    try {
-        await todoServices.update(userId, todoId, fields);
-    } catch (e) {
-        return next(e)
+        const userId = req.user._id;
+        const todoId = req.params.id;
+        const fields = req.body || {};
+
+        if (!Object.keys(fields).length) {
+            return res.end();
+        }
+
+        try {
+            await todoServices.update(userId, todoId, fields);
+        } catch (e) {
+            return next(e)
+        }
+
+        res.end('Updated');
     }
-
-    res.end('Updated', todo);
-});
+);
 
 router.delete('/:id', async (req, res, next) => {
     const todoId = req.params.id;
