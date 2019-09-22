@@ -11,42 +11,51 @@ export async function sendForm(url, form) {
 }
 
 export function blockForm(form) {
-    const loader = form.querySelector('#loader');
-    const submitButton = form.querySelector('#submitButton');
+    // const loader = form.querySelector('#loader');
+    // const submitButton = form.querySelector('#submitButton');
 
-    loader.classList.remove('hide');
-    submitButton.classList.add('disabled');
+    // loader.classList.remove('hide');
+    // submitButton.classList.add('disabled');
 }
 
 export function unblockForm(form) {
-    const loader = form.querySelector('#loader');
-    const submitButton = form.querySelector('#submitButton');
+    // const loader = form.querySelector('#loader');
+    // const submitButton = form.querySelector('#submitButton');
 
-    loader.classList.add('hide');
-    submitButton.classList.remove('disabled');
+    // loader.classList.add('hide');
+    // submitButton.classList.remove('disabled');
 }
 
-export function resetError(form, field) {
-    const errorContainer = getErrorContainer(form, field);
+//uk-form-danger
+//uk-text-danger
 
-    field.classList.remove('invalid');
-    if (errorContainer) errorContainer.dataset.error = '';
+export function resetError(form, field) {
+    field.classList.remove('uk-form-danger');
+    removeError(field);
 }
 
 export function getField(form, fieldName) {
     return form.querySelector(`input[name="${fieldName}"]`);
 }
 
-export function getErrorContainer(form, field) {
-    return field.parentNode.querySelector('.error-container');
+function addError(field, errorMsg) {
+    const errorElem = `<span class="error uk-text-danger">${errorMsg}</p>`;
+
+    field.parentNode.insertAdjacentHTML('afterend', errorElem);
+}
+
+function removeError(field) {
+    const wrapper = field.parentNode.parentNode;
+    const errorElem = wrapper.querySelector('.error');
+
+    if (errorElem) wrapper.removeChild(errorElem);
 }
 
 export function showError(form, fieldName, errorMsg) {
     const field = getField(form, fieldName);
-    const errorContainer = getErrorContainer(form, field);
 
-    field.classList.add('invalid');
-    if (errorContainer) errorContainer.dataset.error = errorMsg;
+    field.classList.add('uk-form-danger');
+    addError(field, errorMsg);
 }
 
 export function displayErrors(form, errors = []) {

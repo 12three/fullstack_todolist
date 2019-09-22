@@ -28,9 +28,9 @@ async function login(username, password) {
     }
 
     if (!user) {
-        return done(new AuthError('Unknown user', 'UU'));
+        throw new AuthError('Unknown user', 'UU');
     } else if (!user.checkPassword(password)) {
-        return done(new AuthError('Wrong password', 'WP'));
+        throw new AuthError('Wrong password', 'WP');
     }
 
     return user;

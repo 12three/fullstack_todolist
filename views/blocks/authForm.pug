@@ -1,21 +1,26 @@
-h3.center-align= title
-.row
-    .card-panel.col.s8.offset-s2(style="position: relative")
-        .row
-            form.col.s8.offset-s2(style="padding-top: 35px" method="POST" name= title.toLowerCase())
-                .progress.hide#loader(style="position: absolute; margin: 0; top: 0; left: 0; right: 0; border-radius: 0")
-                    .indeterminate
-                .row
-                    .input-field.col.s12
-                        input#username.validate(type='text' name="username")
-                        label(for='username') Username
-                        span.error-container.helper-text(data-error="wrong")
-                .row
-                    .input-field.col.s12
-                        input#password.validate(type='password' name="password")
-                        label(for='password') Password
-                        span.error-container.helper-text(data-error="wrong")
-                div.center-align
-                    button#submitButton.btn.waves-effect.waves-light.btn-large(type='submit')
-                        | Submit
-                        i.material-icons.right send
+div(style="padding-top: 70px").uk-flex.uk-flex-center
+    .uk-card.uk-card-default.uk-width-1-2
+        .uk-card-body.uk-flex.uk-flex-column.uk-flex-middle
+            div.uk-width-1-1
+                h1.uk-heading-line.uk-text-center
+                    span= title
+            .uk-width-3-4.uk-flex-center
+                form.uk-form-stacked(method="POST" name= title.toLowerCase())
+                    .uk-margin
+                        label.uk-form-label(for='username') Username
+                        .uk-form-controls
+                            .uk-position-relative
+                                span.uk-form-icon(uk-icon='icon: user')
+                                input#username.uk-input(type='text' name="username")
+
+                    .uk-margin
+                        label.uk-form-label(for='password') Password
+                        .uk-form-controls
+                            .uk-position-relative
+                                span.uk-form-icon(uk-icon='icon: lock')
+                                input#password.uk-input(type='password' name="password")
+
+                    .uk-text-center
+                        button#submitButton(class="uk-button uk-button-primary") Submit
+
+

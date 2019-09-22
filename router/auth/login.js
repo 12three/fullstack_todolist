@@ -26,10 +26,11 @@ router.post('/',
             user = await userServices.login(username, password);
         } catch (e) {
             if (e) {
-                if (err instanceof AuthError) {
+                console.log(e);
+                if (e instanceof AuthError) {
                     let fieldName = '';
 
-                    switch (err.status) {
+                    switch (e.status) {
                         case 'UU':
                             fieldName = 'username';
                             break;
@@ -46,12 +47,12 @@ router.post('/',
                         errors: [
                             {
                                 param: fieldName,
-                                msg: err.message,
+                                msg: e.message,
                             },
                         ],
                     });
                 } else {
-                    next(e)
+                    return next(e)
                 }
             }
         }

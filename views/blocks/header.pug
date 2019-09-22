@@ -1,11 +1,13 @@
-nav
-  .nav-wrapper
-    ul#nav-mobile.right.hide-on-med-and-down
-      if user
-        li
-          a#logoutButton(href='/login') Logout
-      else
-        li(class= pageName == 'login' ? 'active' : '')
-          a(href='/login') Login
-        li(class= pageName == 'registration' ? 'active' : '')
-          a(href='/registration') Registration
+nav.uk-navbar-container.tm-navbar-container
+  .uk-container
+    div(uk-navbar='')
+      .uk-navbar-right
+        ul.uk-navbar-nav
+          if user
+            li
+              a#logoutButton(href='/login') Logout
+          else
+            li(class= pageName == 'login' ? 'uk-active' : '')
+              a(href='/login') Login
+            li(class= pageName == 'registration' ? 'uk-active' : '')
+              a(href='/registration') Registration

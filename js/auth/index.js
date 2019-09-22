@@ -7,7 +7,7 @@ const loginForm = document.querySelector('form[name="login"]');
 
 if (loginForm) {
     loginForm.addEventListener('submit', loginHandler);
-    loginForm.addEventListener('keypress', function(e) {
+    loginForm.addEventListener('keydown', function(e) {
         resetError(this, e.target);
     });
 }
