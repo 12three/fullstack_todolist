@@ -9,18 +9,22 @@ export default class CreateTodo extends React.Component {
         return async function(e) {
             e.preventDefault();
 
-            const newTodo = {title: this.state.title};
+            const title = this.state.title;
 
-            const res = await fetch('/todo', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(newTodo),
-            })
-            if (res.ok) {
-                this.setState({ title: '' });
-                done(null, newTodo);
+            if (title) {
+                const newTodo = {title};
+
+                const res = await fetch('/todo', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(newTodo),
+                })
+                if (res.ok) {
+                    this.setState({ title: '' });
+                    done(null, newTodo);
+                }
             }
         }
     }
