@@ -39,7 +39,7 @@ class TodoList extends React.Component {
 
         return (
             <div>
-                <ul>{todos}</ul>
+                <ul className="uk-list">{todos}</ul>
                 <CreateTodo submitCb={this.submitCb.bind(this)} />
             </div>
         );

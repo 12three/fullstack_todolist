@@ -6,7 +6,15 @@ export default class Todo extends React.Component {
         isEdit: false,
         title: this.props.data.title,
         id: this.props.data._id,
+        done: true,
     };
+    input = React.createRef()
+
+    componentDidUpdate(prevProps, prevState) {
+        if (!prevState.isEdit && this.state.isEdit) {
+            this.focusEditInput();
+        }
+    }
 
     handleRemove(done) {
         return async function() {
@@ -41,23 +49,57 @@ export default class Todo extends React.Component {
         this.setState({ title: e.target.value });
     }
 
+    handlerDoneChange(e) {
+        this.setState({ done: e.target.checked });
+    }
+
+    focusEditInput() {
+        this.input.current.focus();
+    }
+
     render() {
         const regularView = (
             <div>
-                {this.state.title}
-                <button type="button" onClick={this.handleRemove(this.props.removeTodoCb).bind(this)}>
-                    Remove
-                </button>
-                <button type="button" onClick={this.toggleEditClick(noop).bind(this)}>
-                    Edit
-                </button>
+                <input
+                    className="uk-checkbox"
+                    type="checkbox"
+                    checked={this.state.done}
+                    onChange={this.handlerDoneChange.bind(this)}
+                    style={{ 'margin-right': '10px' }}
+                ></input>
+                <span
+                    onDoubleClick={this.toggleEditClick(noop).bind(this)}
+                    className={this.state.done ? 'uk-text-muted' : 'uk-text-emphasis'}
+                    style={{
+                        'margin-right': '10px',
+                        'text-decoration': this.state.done ? 'line-through' : 'none',
+                    }}
+                >
+                    {this.state.title}
+                </span>
+                <span
+                    uk-icon="trash"
+                    className="uk-icon-link"
+                    onClick={this.handleRemove(this.props.removeTodoCb).bind(this)}
+                ></span>
+                <span uk-icon="pencil" className="uk-icon-link" onClick={this.toggleEditClick(noop).bind(this)}></span>
             </div>
         );
 
         const editView = (
             <div>
-                <input type="text" value={this.state.title} onChange={this.handlerEditTitle.bind(this)} />
-                <button type="button" onClick={this.toggleEditClick(this.changeTitleCb.bind(this)).bind(this)}>
+                <input
+                    type="text"
+                    ref={this.input}
+                    className="uk-input uk-form-width-medium uk-form-small"
+                    value={this.state.title}
+                    onChange={this.handlerEditTitle.bind(this)}
+                />
+                <button
+                    type="button"
+                    className="uk-button uk-button-primary uk-button-small"
+                    onClick={this.toggleEditClick(this.changeTitleCb.bind(this)).bind(this)}
+                >
                     Ok
                 </button>
             </div>

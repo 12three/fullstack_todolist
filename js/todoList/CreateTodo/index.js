@@ -6,23 +6,22 @@ export default class CreateTodo extends React.Component {
     };
 
     handlerSubmit(done) {
-        return function(e) {
+        return async function(e) {
             e.preventDefault();
 
             const newTodo = {title: this.state.title};
 
-            fetch('/todo', {
+            const res = await fetch('/todo', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(newTodo),
-            }).then(res => {
-                if (res.ok) {
-                     this.setState(newTodo);
-                     done(null, newTodo);
-                }
-            });
+            })
+            if (res.ok) {
+                this.setState({ title: '' });
+                done(null, newTodo);
+            }
         }
     }
 
@@ -33,10 +32,14 @@ export default class CreateTodo extends React.Component {
     render() {
         return (
             <form action="/todo" method="post" onSubmit={this.handlerSubmit(this.props.submitCb).bind(this)}>
-                <input type="text" name="title" onChange={this.handleChange.bind(this)} />
-                <button>
-                    Create
-                </button>
+                <input
+                    type="text"
+                    name="title"
+                    className="uk-input uk-form-width-large"
+                    value={this.state.title}
+                    onChange={this.handleChange.bind(this)}
+                />
+                <button className="uk-button uk-button-primary">Create</button>
             </form>
         );
     }
