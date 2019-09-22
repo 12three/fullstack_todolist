@@ -41,8 +41,6 @@ router.get('/', async (req, res, next) => {
 });
 
 router.put('/:id', async (req, res, next) => {
-        const result = validationResult(req);
-
         const userId = req.user._id;
         const todoId = req.params.id;
         const fields = req.body || {};

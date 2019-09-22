@@ -6,9 +6,9 @@ export default class Todo extends React.Component {
         isEdit: false,
         title: this.props.data.title,
         id: this.props.data._id,
-        done: true,
+        done: this.props.data.done,
     };
-    input = React.createRef()
+    input = React.createRef();
 
     componentDidUpdate(prevProps, prevState) {
         if (!prevState.isEdit && this.state.isEdit) {
@@ -49,8 +49,20 @@ export default class Todo extends React.Component {
         this.setState({ title: e.target.value });
     }
 
-    handlerDoneChange(e) {
-        this.setState({ done: e.target.checked });
+    async handlerDoneChange(e) {
+        const res = await fetch(`/todo/${this.state.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                done: !this.state.done,
+            }),
+        });
+
+        if (res.ok) {
+            this.setState({ done: !this.state.done });
+        }
     }
 
     focusEditInput() {
@@ -65,14 +77,14 @@ export default class Todo extends React.Component {
                     type="checkbox"
                     checked={this.state.done}
                     onChange={this.handlerDoneChange.bind(this)}
-                    style={{ 'margin-right': '10px' }}
+                    style={{ 'marginRight': '10px' }}
                 ></input>
                 <span
                     onDoubleClick={this.toggleEditClick(noop).bind(this)}
                     className={this.state.done ? 'uk-text-muted' : 'uk-text-emphasis'}
                     style={{
-                        'margin-right': '10px',
-                        'text-decoration': this.state.done ? 'line-through' : 'none',
+                        marginRight: '10px',
+                        textDecoration: this.state.done ? 'line-through' : 'none',
                     }}
                 >
                     {this.state.title}
