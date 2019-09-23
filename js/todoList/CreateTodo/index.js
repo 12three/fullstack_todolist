@@ -2,7 +2,7 @@ import React from 'react';
 
 export default class CreateTodo extends React.Component {
     state = {
-        title: this.props.title,
+        title: '',
     };
 
     handlerSubmit(done) {
